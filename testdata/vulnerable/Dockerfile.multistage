@@ -1,0 +1,10 @@
+FROM golang:1.22 AS build
+WORKDIR /src
+COPY . .
+RUN go build -o /out/app ./cmd/app
+
+FROM alpine:3.20
+RUN apk add curl
+COPY --from=biuld /out/app /usr/local/bin/app
+USER root
+ENTRYPOINT ["/usr/local/bin/app"]
